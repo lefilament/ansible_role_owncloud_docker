@@ -4,7 +4,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile-ownbak
-        image: filament/duplicity:mysql
+        image: remifilament/duplicity:mysql
         hostname: backup-owcnloud
         domainname: "{{ cloud_url }}"
         environment:
