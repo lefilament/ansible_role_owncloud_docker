@@ -1,0 +1,44 @@
+---
+
+## Install Owncloud docker
+- name: Install owncloud docker
+  template:
+    src: owncloud.yaml.j2
+    dest: /home/docker/owncloud.yaml
+    owner: root
+    group: root
+    mode: 0400
+
+- name: start owncloud docker
+  docker_service:
+    project_src: /home/docker/
+    files: owncloud.yaml
+    project_name: owncloud
+  async: 120
+  poll: 10
+  tags: start_docker
+
+- name: Install owncloud backup compose file
+  template:
+    src: backup.yaml.j2
+    dest: /home/docker/backups/backup-owncloud.yaml
+    owner: root
+    group: root
+    mode: 0400
+
+- name: Copy docker file for mysql duplicity
+  copy:
+    src: Dockerfile
+    dest: /home/docker/backups/Dockerfile-ownbak
+    owner: root
+    group: root
+    mode: 0644
+
+- name: add cron job to run backup every week
+  cron:
+    name: backup owncloud
+    minute: 43
+    hour: 2
+    weekday: 7
+    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-owncloud.yaml run --rm backup_owncloud 
+  when: inventory_hostname in groups['maintenance_contract']

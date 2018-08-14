@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  owncloud:
+    image: owncloud/server:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    environment:
+      - OWNCLOUD_DOMAIN={{ cloud_url }}
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_NAME={{ cloud_db_user }}
+      - OWNCLOUD_DB_USERNAME={{ cloud_db_user }}
+      - OWNCLOUD_DB_PASSWORD={{ cloud_db_pass }}
+      - OWNCLOUD_DB_HOST=db
+      - OWNCLOUD_ADMIN_USERNAME={{ cloud_admin }}
+      - OWNCLOUD_ADMIN_PASSWORD={{ cloud_admin_pass }}
+      - OWNCLOUD_UTF8MB4_ENABLED=true
+      - OWNCLOUD_REDIS_ENABLED=true
+      - OWNCLOUD_REDIS_HOST=redis
+    volumes:
+      - owncloud:/mnt/data:z
+    networks:
+      default:
+      inverseproxy_shared:
+    labels:
+      traefik.docker.network: "inverseproxy_shared"
+      traefik.enable: "true"
+      traefik.frontend.passHostHeader: "true"
+      traefik.port: "80"
+      traefik.own.frontend.rule: "Host:{{ cloud_url }}"
+
+  db:
+    image: webhippie/mariadb:latest
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD={{ cloud_db_root }}
+      - MARIADB_USERNAME={{ cloud_db_user }}
+      - MARIADB_PASSWORD={{ cloud_db_pass }}
+      - MARIADB_DATABASE={{ cloud_db_user }}
+      - MARIADB_MAX_ALLOWED_PACKET=128M
+      - MARIADB_INNODB_LOG_FILE_SIZE=64M
+      - MARIADB_INNODB_LARGE_PREFIX=ON
+      - MARIADB_INNODB_FILE_FORMAT=Barracuda
+    volumes:
+      - mysql:/var/lib/mysql:z
+
+  redis:
+    image: webhippie/redis:latest
+    restart: unless-stopped
+    environment:
+      - REDIS_MAXCONN=10000
+    volumes:
+      - redis:/var/lib/redis:z
+
+networks:
+    default:
+        driver_opts:
+            encrypted: 1
+    inverseproxy_shared:
+        external: true
+
+volumes:
+    owncloud:
+    mysql:
+    redis:
