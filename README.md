@@ -1,4 +1,4 @@
-# Ansible role to deploy Owncloud server docker from [Tecnativa](https://github.com/Tecnativa/docker-odoo-base)
+# Ansible role to deploy Owncloud server docker
 
 [![](https://img.shields.io/badge/licence-AGPL--3-blue.svg)](http://www.gnu.org/licenses/agpl "License: AGPL-3")
 
