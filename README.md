@@ -7,7 +7,7 @@ This role allows you to deploy Owncloud docker with associated MariaDB and Redis
 On top of deploying and starting the Owncloud instance, the following functionality has been added:
 - backup and restore based on duplicity docker from [Tecnativa](https://github.com/Tecnativa/docker-duplicity) which has been customized for our needs to backup on Public Object Storage (OpenShift) directory and running it every week using cron, keeping only the last 4 weeks backups (you can modify these parameters in templates/backups.yaml.j2)
 
-Prior to running this role, you would need to have docker installed on your server and a traefik proxy (which is the purpose of [this role](https://github.com/remi-filament/ansible_role_docker_server))
+Prior to running this role, you would need to have docker installed on your server and a traefik proxy (which is the purpose of [this role](https://github.com/lefilament/ansible_role_docker_server))
 
 In order to use this role, you would need to define the following variables for your server (in hostvars for instance) - Only the names of the variables are provided below (not the values) for these used by this role to properly configure everything, you may copy this file directly in hostvars and set the variable although we could only encourage you to use an Ansible vault and refer vault variables from there:
 
@@ -38,13 +38,13 @@ cloud_admin:
 cloud_admin_pass: 
 
 # Swift Configuration
-swift_username:
-swift_password:
-swift_authurl:
-swift_authversion:
-swift_tenantname:
-swift_tenantid:
-swift_regionname:
+swift_cloud_username:
+swift_cloud_password:
+swift_cloud_authurl:
+swift_cloud_authversion:
+swift_cloud_tenantname:
+swift_cloud_tenantid:
+swift_cloud_regionname:
 
 
 ```
@@ -52,7 +52,7 @@ swift_regionname:
 # Procedure to restore Owncloud from backup
 
 In order to restore Owncloud database and files from backup, change directory to /home/docker/backups and run the following command:
-```docker-compose -f backup-owncloud.yaml run --rm backup_owncloud sh -c "restore --force && mysql -h \$MYSQL_HOST -u \$MYSQL_USER -p\$MYSQL_PASSWORD \$MYSQL_DATABASE < \$SRC/mysql_db_\$MYSQL_DATABASE.sql"```
+`docker-compose -f backup-owncloud.yaml run --rm backup_owncloud sh -c "restore --force && mysql -h \$MYSQL_HOST -u \$MYSQL_USER -p\$MYSQL_PASSWORD \$MYSQL_DATABASE < \$SRC/mysql_db_\$MYSQL_DATABASE.sql"`
 
 
 
