@@ -28,12 +28,18 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
-      traefik.frontend.headers.STSSeconds: "15552000"
-      traefik.frontend.headers.STSIncludeSubdomains: "true"
-      traefik.frontend.headers.STSPreload: "true"
-      traefik.frontend.passHostHeader: "true"
-      traefik.port: "8080"
-      traefik.own.frontend.rule: "Host:{{ cloud_url }}"
+      traefik.http.routers.cloud-unsec.entrypoints: "http"
+      traefik.http.routers.cloud-unsec.middlewares: "https-redirect@file"
+      traefik.http.routers.cloud-unsec.rule: "Host(`{{ cloud_url }}`)"
+      traefik.http.routers.cloud-unsec.service: "cloud"
+      traefik.http.routers.cloud.entrypoints: "https"
+      traefik.http.routers.cloud.middlewares: "security-headers@file"
+      traefik.http.routers.cloud.rule: "Host(`{{ cloud_url }}`)"
+      traefik.http.routers.cloud.service: "cloud"
+      traefik.http.routers.cloud.tls: "true"
+      traefik.http.routers.cloud.tls.certresolver: "le"
+      traefik.http.routers.cloud.tls.options: "default@file"
+      traefik.http.services.cloud.loadbalancer.server.port: "8080"
 
   db:
     image: webhippie/mariadb:latest
