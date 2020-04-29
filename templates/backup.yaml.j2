@@ -3,7 +3,7 @@ services:
     backup_owncloud:
         build:
             context: .
-            dockerfile: Dockerfile-ownbak
+            dockerfile: Dockerfile-mysql
         image: filament/duplicity:mysql
         hostname: backup-owcnloud
         domainname: "{{ cloud_url }}"
