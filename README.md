@@ -24,7 +24,7 @@ ansible_port:
 
 
 ## Owncloud configuration
-# Owncloud URL
+# Owncloud URL (only sub.domain without https:// in front)
 cloud_url: 
 # Owncloud DB user/role
 cloud_db_user: 
