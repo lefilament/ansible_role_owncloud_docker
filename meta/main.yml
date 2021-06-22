@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Rémi
+  description: Role for deploying Owncloud on Docker
+  company: Le Filament (https://le-filament.com)
+  license: AGPL-3.0-or-later
+  min_ansible_version: 2.1
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+  galaxy_tags:
+    - owncloud
+    - docker

@@ -50,5 +50,5 @@
     minute: "43"
     hour: "2"
     weekday: "7"
-    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-owncloud.yaml run --rm backup_owncloud 
+    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-owncloud.yaml run --rm backup_owncloud
   when: inventory_hostname in groups['maintenance_contract']
