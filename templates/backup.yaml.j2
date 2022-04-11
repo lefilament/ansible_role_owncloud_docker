@@ -5,7 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile-mysql
         image: filament/duplicity:mysql
-        hostname: backup-owcnloud
+        hostname: {{ inventory_hostname_short | lower | regex_replace('_','') }}-owcnloud
         environment:
             DST: "swift://owncloud_{{ inventory_hostname|lower }}"
             MYSQL_DATABASE: {{ cloud_db_user }}
@@ -26,6 +26,7 @@ services:
             JOB_302_WHAT: "dup remove-all-but-n-full 5 --force $$DST $$@"
             JOB_302_WHEN: "weekly"
             JOB_700_WHEN: "weekly"
+            OPTIONS: "--allow-source-mismatch"
         volumes:
             - owncloud_owncloud:/mnt/backup/src/owncloud:z
             - ./owncloud:/backups

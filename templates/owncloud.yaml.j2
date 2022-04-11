@@ -2,7 +2,7 @@ version: '3'
 
 services:
   owncloud:
-    image: owncloud/server:latest
+    image: owncloud/server:{{ owncloud_version }}
     container_name: owncloud
     restart: unless-stopped
     depends_on:
@@ -32,7 +32,7 @@ services:
       traefik.http.services.cloud.loadbalancer.server.port: "8080"
 
   db:
-    image: webhippie/mariadb:latest
+    image: webhippie/mariadb:{{ owncloud_db_version }}
     container_name: owncloud_db
     restart: unless-stopped
     environment:

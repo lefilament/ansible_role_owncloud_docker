@@ -1,4 +1,7 @@
 ---
+## OwnCloud an MariaDB versions.
+owncloud_version: "10.8.0"
+owncloud_db_version: "latest"
 
 ## Owncloud URL
 cloud_url: "cloud.example.org"
