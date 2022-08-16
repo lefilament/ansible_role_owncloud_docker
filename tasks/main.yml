@@ -35,9 +35,9 @@
     mode: '0400'
   when: inventory_hostname in groups['maintenance_contract']
 
-- name: Copy docker file for mysql duplicity
-  copy:
-    src: ../docker_nextcloud/files/Dockerfile-backup
+- name: Get docker file for mysql duplicity from docker_nextcloud role
+  get_url:
+    url: "https://sources.le-filament.com/lefilament/ansible-roles/docker_nextcloud/-/raw/master/files/Dockerfile-backup"
     dest: /home/docker/backups/Dockerfile-mysql
     owner: root
     group: root
