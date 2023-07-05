@@ -13,6 +13,8 @@ Role Variables
 --------------
 
 Variables from default directory :
+* owncloud_db_version: MariaDB version to be deployed (defaults to latest)
+* owncloud_version: NextCloud version to be deployed (defaults to 10.11.0)
 * cloud_url: URL on which Owncloud will be listening
 * cloud_db_root: Database root password
 * cloud_db_user: Database user

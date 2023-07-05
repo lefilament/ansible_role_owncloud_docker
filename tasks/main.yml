@@ -2,53 +2,53 @@
 
 ## Install Owncloud docker
 - name: Install owncloud docker
-  template:
-    src: owncloud.yaml.j2
-    dest: /home/docker/owncloud.yaml
-    owner: root
-    group: root
-    mode: '0400'
+  ansible.builtin.template:
+      src: owncloud.yaml.j2
+      dest: /home/docker/owncloud.yaml
+      owner: root
+      group: root
+      mode: '0400'
 
-- name: start owncloud docker
-  docker_compose:
-    project_src: /home/docker/
-    files: owncloud.yaml
-    project_name: owncloud
+- name: Start owncloud docker
+  community.docker.docker_compose:
+      project_src: /home/docker/
+      files: owncloud.yaml
+      project_name: owncloud
   async: 120
   poll: 10
   tags: start_docker
   when: not ansible_check_mode
 
-- name: check that owncloud docker is running
-  docker_compose:
-    project_src: /home/docker/
-    files: owncloud.yaml
-    project_name: owncloud
+- name: Check that owncloud docker is running
+  community.docker.docker_compose:
+      project_src: /home/docker/
+      files: owncloud.yaml
+      project_name: owncloud
   when: ansible_check_mode
 
 - name: Install owncloud backup compose file
-  template:
-    src: backup.yaml.j2
-    dest: /home/docker/backups/backup-owncloud.yaml
-    owner: root
-    group: root
-    mode: '0400'
+  ansible.builtin.template:
+      src: backup.yaml.j2
+      dest: /home/docker/backups/backup-owncloud.yaml
+      owner: root
+      group: root
+      mode: '0400'
   when: inventory_hostname in groups['maintenance_contract']
 
 - name: Get docker file for mysql duplicity from docker_nextcloud role
-  get_url:
-    url: "https://sources.le-filament.com/lefilament/ansible-roles/docker_nextcloud/-/raw/master/files/Dockerfile-backup"
-    dest: /home/docker/backups/Dockerfile-mysql
-    owner: root
-    group: root
-    mode: '0644'
+  ansible.builtin.get_url:
+      url: "https://sources.le-filament.com/lefilament/ansible-roles/docker_nextcloud/-/raw/master/files/Dockerfile-backup"
+      dest: /home/docker/backups/Dockerfile-mysql
+      owner: root
+      group: root
+      mode: '0644'
   when: inventory_hostname in groups['maintenance_contract']
 
-- name: add cron job to run backup every week
-  cron:
-    name: backup owncloud
-    minute: "43"
-    hour: "2"
-    weekday: "7"
-    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-owncloud.yaml run --rm backup_owncloud
+- name: Add cron job to run backup every week
+  ansible.builtin.cron:
+      name: backup owncloud
+      minute: "00"
+      hour: "00"
+      weekday: "7"
+      job: /usr/bin/docker-compose -f /home/docker/backups/backup-owncloud.yaml run --rm backup_owncloud
   when: inventory_hostname in groups['maintenance_contract']
